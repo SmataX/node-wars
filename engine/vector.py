@@ -7,4 +7,4 @@ class Vector:
 
     @staticmethod
     def distance(v1: "Vector", v2: "Vector") -> int:
-        return math.floor(math.sqrt(math.pow(v2.x - v1.x, 2)+math.pow(v2.y - v1.y, 2)))
+        return math.floor(math.hypot(v2.x - v1.x, v2.y - v1.y))

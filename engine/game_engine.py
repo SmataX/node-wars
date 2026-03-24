@@ -1,4 +1,4 @@
-from map_manager import MapManager
+from engine.map_manager import MapManager
 
 class GameEngine:
     def __init__(self, node_count: int = 10):

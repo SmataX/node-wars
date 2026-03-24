@@ -1,5 +1,5 @@
-from node import Node
-from map_generator import MapGenerator
+from engine.node import Node
+from engine.map_generator import MapGenerator
 
 class MapManager:
     def __init__(self, node_count):

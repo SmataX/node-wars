@@ -1,4 +1,4 @@
-from vector import Vector
+from engine.vector import Vector
 
 class Node:
     def __init__(self, id: int, position: Vector, connected_nodes: list["Node"]):
