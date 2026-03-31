@@ -8,3 +8,7 @@ class MapManager:
     
     def init(self):
         self.nodes = MapGenerator.generate(self.node_count)
+
+    def update(self):
+        for node in self.nodes:
+            node.increase_combat_power()
