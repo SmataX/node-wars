@@ -1,5 +1,6 @@
 class Player:
-    def __init__(self, name: str, color: str, is_playable: bool):
+    def __init__(self, name: str, color: str, is_playable: bool, controller = None):
         self.name = name
         self.color = color
         self.is_playable = is_playable
+        self.controller = controller
