@@ -11,10 +11,12 @@ class PlayersManager:
     def __init__(self, player_count: int, map_manager: MapManager, local_player: bool = False):
         self.player_count = player_count
         self.players = []
+        self.active_players = []
         self.map_manager = map_manager
 
     def init(self, actions_manager: ActionsManager):
         self.players = self.create_players()
+        self.active_players = self.players.copy()
         self.spawn_players(self.map_manager.nodes)
         self.add_controller_for_players(actions_manager)
 
@@ -35,5 +37,10 @@ class PlayersManager:
                 node.owner = self.players[spawned_players_count]
                 spawned_players_count += 1
     
-    def get_active_players(self) -> list[Player]:
-        return [player for player in self.players if len(self.map_manager.get_nodes_owned_by_player(player)) > 0]
+    def update_player_status(self, player: Player) -> bool:
+        if len(self.map_manager.get_nodes_owned_by_player(player)) > 0:
+            return True
+        
+        if player in self.active_players:
+            self.active_players.remove(player)
+        return False
