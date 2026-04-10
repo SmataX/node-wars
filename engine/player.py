@@ -1,6 +1,6 @@
 class Player:
-    def __init__(self, name: str, color: str, is_playable: bool, controller = None):
+    def __init__(self, name: str, color: str, controller = None):
         self.name = name
         self.color = color
-        self.is_playable = is_playable
         self.controller = controller
+        self.owned_nodes = []

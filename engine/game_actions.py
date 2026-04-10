@@ -21,14 +21,10 @@ class ActionsManager:
 
         else:
             if node.combat_power > target_node.combat_power:
-                prevoius_owner = target_node.owner
                 remaining_cp = node.combat_power - target_node.combat_power
                 target_node.capture_node(player, remaining_cp)
                 node.combat_power = 0
                 print(f"[INFO] {player.name} captured {target_node_id}!")
-
-                if self.players_manager.update_player_status(prevoius_owner) is False:
-                    print(f"[INFO] {target_node.owner} lost a game!")
             else:
                 target_node.combat_power -= node.combat_power
                 node.combat_power = 0

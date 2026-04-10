@@ -1,46 +1,41 @@
 import random
+from typing import TYPE_CHECKING
 from pygame import Color
 
 from engine.player import Player
 from engine.node import Node
 from engine.AI.random_actions import AIController
-from engine.game_actions import ActionsManager
-from engine.map_manager import MapManager
 
 class PlayersManager:
-    def __init__(self, player_count: int, map_manager: MapManager, local_player: bool = False):
+    def __init__(self, player_count: int):
         self.player_count = player_count
         self.players = []
         self.active_players = []
-        self.map_manager = map_manager
+        self.engine = None
 
-    def init(self, actions_manager: ActionsManager):
+
+    def init(self, engine):
+        self.engine = engine
         self.players = self.create_players()
         self.active_players = self.players.copy()
-        self.spawn_players(self.map_manager.nodes)
-        self.add_controller_for_players(actions_manager)
+        self.spawn_players()
+
 
     def create_players(self) -> list[Player]:
-        return [
-            Player(f"Bot {index}", Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), False) for index in range(self.player_count)
-        ]
+        players = []
+        for index in range(self.player_count):
+            color = Color(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            player  = Player(f"Bot {index}", color, controller=None)
+            player.controller = AIController(player, self.engine.actions_manager, self.engine.map_manager)
+            players.append(player)
+        return players
     
-    def add_controller_for_players(self, actions_manager: ActionsManager):
-        for player in self.players:
-            player.controller = AIController(player, actions_manager, self.map_manager)
     
-    def spawn_players(self, nodes: list[Node]):
-        spawned_players_count = 0
-        while spawned_players_count < self.player_count:
-            node = random.choice(nodes)
-            if node.owner is None:
-                node.owner = self.players[spawned_players_count]
-                spawned_players_count += 1
-    
-    def update_player_status(self, player: Player) -> bool:
-        if len(self.map_manager.get_nodes_owned_by_player(player)) > 0:
-            return True
+    def spawn_players(self):
+        nodes_source = self.engine.map_manager.nodes
+        all_nodes = list(nodes_source.values()) if isinstance(nodes_source, dict) else nodes_source
         
-        if player in self.active_players:
-            self.active_players.remove(player)
-        return False
+        random_nodes = random.sample(all_nodes, self.player_count)
+        for player, node in zip(self.players, random_nodes):
+            node.owner = player
+            player.owned_nodes.append(node)

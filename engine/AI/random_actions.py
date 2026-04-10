@@ -11,9 +11,7 @@ class AIController:
         self.map_manager = map_manager
 
     def make_random_action(self):
-        owned_nodes = self.map_manager.get_nodes_owned_by_player(self.player)
-
-        random_node = random.choice(owned_nodes)
+        random_node = random.choice(self.player.owned_nodes)
         random_connected_node = random.choice(random_node.connected_nodes)
 
         self.actions_manager.move(random_node.id, random_connected_node.id, self.player)

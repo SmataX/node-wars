@@ -16,6 +16,10 @@ class Node:
             self.combat_power += self.combat_power_income
 
     def capture_node(self, player: Player, new_cp: int):
+        if self.owner is not None:
+            self.owner.owned_nodes.remove(self)
+
         self.owner = player
         self.combat_power = new_cp
+        self.owner.owned_nodes.append(self)
         

@@ -7,7 +7,7 @@ from engine.game_actions import ActionsManager
 class GameEngine:
     def __init__(self, node_count: int = 10, player_count: int = 3):
         self.map_manager = MapManager(node_count)
-        self.players_manager = PlayersManager(player_count, self.map_manager)
+        self.players_manager = PlayersManager(player_count)
         self.actions_manager = ActionsManager(self.map_manager, self.players_manager)
         
         self.timer = 0
@@ -16,7 +16,7 @@ class GameEngine:
     def start(self):
         print("[info] Start")
         self.map_manager.init()
-        self.players_manager.init(self.actions_manager)
+        self.players_manager.init(engine=self)
 
     def update(self):
         current_time = time.time()
@@ -26,17 +26,28 @@ class GameEngine:
         self.timer += dt
 
         if self.timer >= 1.0:
-            print("[info] Update")
             self.map_manager.update()
             self.timer = 0
 
+            # check for active players
             for player in self.players_manager.active_players:
-                player.controller.make_random_action()
+                if len(player.owned_nodes) == 0:
+                    print(f"[INFO] {player.name} lost a game!")
+                    self.players_manager.active_players.remove(player)
+
+            for player in self.players_manager.active_players:
+                if len(player.owned_nodes) > 0:
+                    player.controller.make_random_action()
 
         if len(self.players_manager.active_players) == 1:
             print(f"[INFO] {self.players_manager.active_players[0].name} wins a game")
+            return False
+        return True
 
 
 if __name__ == "__main__":
+    running = True
     engine = GameEngine()
     engine.start()
+    while running:
+        running = engine.update()
