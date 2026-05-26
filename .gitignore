@@ -1,1 +1,4 @@
 __pycache__
+models
+ppo_logs
+.DS_Store

@@ -17,16 +17,16 @@ class ActionsManager:
             cp_to_move = node.combat_power if node.combat_power + target_node.combat_power <= 500 else 500 - target_node.combat_power
             node.combat_power -= cp_to_move
             target_node.combat_power += cp_to_move
-            print(f"[INFO] {player.name} is moving from {node_id} to {target_node_id}")
+            # print(f"[INFO] {player.name} is moving from {node_id} to {target_node_id}")
 
         else:
             if node.combat_power > target_node.combat_power:
                 remaining_cp = node.combat_power - target_node.combat_power
                 target_node.capture_node(player, remaining_cp)
                 node.combat_power = 0
-                print(f"[INFO] {player.name} captured {target_node_id}!")
+                # print(f"[INFO] {player.name} captured {target_node_id}!")
             else:
                 target_node.combat_power -= node.combat_power
                 node.combat_power = 0
-                print(f"[INFO] {player.name} attack on {target_node_id} failed. Units lost.")
+                # print(f"[INFO] {player.name} attack on {target_node_id} failed. Units lost.")
 
